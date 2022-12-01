@@ -31,24 +31,10 @@ const userSchema = new mongoose.Schema(
                 message: 'Passwords do not match',
             },
         },
-        photo: {
-            type: String,
-            default: 'default.png',
-        },
-        role: {
-            type: String,
-            default: 'user',
-        },
-        verified: {
-            type: Boolean,
-            default: true,
-            select: false,
-        },
+        
     },
     {
         timestamps: true,
-        toJSON: { virtuals: true },
-        toObject: { virtuals: true },
     }
 )
 
@@ -74,4 +60,4 @@ userSchema.methods.comparePasswords = async function (
 }
 
 const userModel = mongoose.model('User', userSchema)
-module.exports = userModel;
+module.exports = userModel
