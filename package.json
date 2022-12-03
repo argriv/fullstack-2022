@@ -28,6 +28,7 @@
     "graphql": "^16.6.0",
     "graphql-compose": "^9.0.10",
     "graphql-compose-mongoose": "^9.7.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.4",
     "validator": "^13.7.0"
   }

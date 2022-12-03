@@ -17,6 +17,31 @@ async function startApolloServer(schema) {
             ApolloServerPluginDrainHttpServer({ httpServer }),
             ApolloServerPluginLandingPageLocalDefault({ embed: true }),
         ],
+        context: ({ req }) => {
+            const header = req.headers.authorization;
+            if (!header) {
+              return { isAdmin: false };
+            }
+        
+            const token = header.split(" ");
+            if (!token) {
+              return { isAdmin: false };
+            }
+        
+            let decodeToken;
+            try {
+              decodeToken = jwt.verify(token[1], process.env.JWT_SECRET);
+            } catch (err) {
+              return { isAdmin: false };
+            }
+        
+            // in case any error found
+            if (!!!decodeToken) {
+              return { isAdmin: false };
+            }
+        
+            return { userId: decodeToken.userId, isAdmin: decodeToken.isAdmin };
+          }
     })
     await server.start()
     server.applyMiddleware({ app })

@@ -1,4 +1,4 @@
 require('./mongodb_connection')
 const startApolloServer = require('./server')
-const graphqlSchema = require('./models/contract')
+const graphqlSchema = require('./models/')
 startApolloServer(graphqlSchema)
