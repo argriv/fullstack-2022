@@ -5,6 +5,9 @@ const {
 } = require('apollo-server-core')
 const express = require('express')
 const http = require('http')
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
+dotenv.config()
 
 async function startApolloServer(schema) {
     const app = express()
@@ -18,30 +21,30 @@ async function startApolloServer(schema) {
             ApolloServerPluginLandingPageLocalDefault({ embed: true }),
         ],
         context: ({ req }) => {
-            const header = req.headers.authorization;
+            const header = req.headers.authorization
             if (!header) {
-              return { isAdmin: false };
+                return { isAdmin: false }
             }
-        
-            const token = header.split(" ");
+
+            const token = header.split(' ')
             if (!token) {
-              return { isAdmin: false };
+                return { isAdmin: false }
             }
-        
-            let decodeToken;
+
+            let decodeToken
             try {
-              decodeToken = jwt.verify(token[1], process.env.JWT_SECRET);
+                decodeToken = jwt.verify(token[1], process.env.JWT_SECRET)
             } catch (err) {
-              return { isAdmin: false };
+                return { isAdmin: false }
             }
-        
+
             // in case any error found
             if (!!!decodeToken) {
-              return { isAdmin: false };
+                return { isAdmin: false }
             }
-        
-            return { userId: decodeToken.userId, isAdmin: decodeToken.isAdmin };
-          }
+
+            return { userId: decodeToken.userId, isAdmin: decodeToken.isAdmin }
+        },
     })
     await server.start()
     server.applyMiddleware({ app })

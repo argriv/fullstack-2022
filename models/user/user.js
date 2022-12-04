@@ -17,9 +17,9 @@ const userSchema = new mongoose.Schema(
         timestamps: true,
     }
 )
-
+const customizationOptions = {}
 const User = mongoose.model('User', userSchema)
-const UserTC = composeWithMongoose(User).addFields({
+const UserTC = composeWithMongoose(User, customizationOptions).addFields({
     token: { type: 'String' },
 })
 
@@ -97,4 +97,4 @@ schemaComposer.Mutation.addFields({
 })
 
 schemaComposer.buildSchema()
-module.exports = UserTC
+module.exports = { UserTC }
