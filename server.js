@@ -22,28 +22,29 @@ async function startApolloServer(schema) {
         ],
         context: ({ req }) => {
             const header = req.headers.authorization
-            if (!header) {
-                return { isAdmin: false }
-            }
 
+            // not found
+            if (!header) return { isAuth: false }
+
+            // token
             const token = header.split(' ')
-            if (!token) {
-                return { isAdmin: false }
-            }
+
+            // token not found
+            if (!token) return { isAuth: false }
 
             let decodeToken
+
             try {
-                decodeToken = jwt.verify(token[1], process.env.JWT_SECRET)
+                decodeToken = jwt.verify(token[1], privateKey)
             } catch (err) {
-                return { isAdmin: false }
+                return { isAuth: false }
             }
 
             // in case any error found
-            if (!!!decodeToken) {
-                return { isAdmin: false }
-            }
+            if (!!!decodeToken) return { isAuth: false }
 
-            return { userId: decodeToken.userId, isAdmin: decodeToken.isAdmin }
+            // token decoded successfully, and extracted data
+            return { isAuth: true, userId: decodeToken.userId }
         },
     })
     await server.start()
